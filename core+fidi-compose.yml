@@ -1,0 +1,47 @@
+version: '3.3'
+
+services:
+  app:
+    image: fireflyiii/core:latest
+    container_name: fireflyiii-app
+    restart: always
+    volumes:
+      - firefly_iii_upload:/var/www/html/storage/upload
+    env_file: ff3.env
+    environment:
+      - VIRTUAL_HOST=firefly3.kaltec.lan
+      - VIRTUAL_PORT=8080
+      - APP_URL=https://firefly3.kaltec.lan
+      - TRUSTED_PROXIES=**
+      - TZ=America/Los_Angeles
+    depends_on:
+      - db
+
+  db:
+    image: mariadb
+    container_name: ff3-db
+    hostname: fireflyiiidb
+    restart: always
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_USER=firefly
+      - MYSQL_PASSWORD=*o27WuZGCe9^D*ZBvez
+      - MYSQL_DATABASE=firefly
+    volumes:
+      - firefly_iii_db:/var/lib/mysql
+
+  fidi:
+    container_name: ff3-fidi
+    image: fireflyiii/data-importer:latest
+    env_file: fidi.env
+    environment:
+      - VIRTUAL_HOST=fidi.kaltec.lan
+      - VIRTUAL_PORT=8080
+      - APP_URL=https://fidi.kaltec.lan
+      - TRUSTED_PROXIES=**
+    depends_on:
+      - app
+volumes:
+  portainer_data:
+  firefly_iii_upload:
+  firefly_iii_db:
