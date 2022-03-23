@@ -9,9 +9,9 @@ services:
       - firefly_iii_upload:/var/www/html/storage/upload
     env_file: ff3.env
     environment:
-      - VIRTUAL_HOST=firefly3.kaltec.lan
+      - VIRTUAL_HOST=firefly3.example.com
       - VIRTUAL_PORT=8080
-      - APP_URL=https://firefly3.kaltec.lan
+      - APP_URL=https://firefly3.example.com
       - TRUSTED_PROXIES=**
       - TZ=America/Los_Angeles
     depends_on:
@@ -25,12 +25,11 @@ services:
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
       - MYSQL_USER=firefly
-      - MYSQL_PASSWORD=*o27WuZGCe9^D*ZBvez
+      - MYSQL_PASSWORD=somerandompassword
       - MYSQL_DATABASE=firefly
     volumes:
       - firefly_iii_db:/var/lib/mysql
 
 volumes:
-  portainer_data:
   firefly_iii_upload:
   firefly_iii_db:
