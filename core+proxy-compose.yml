@@ -1,0 +1,45 @@
+version: '3.3'
+
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+
+  app:
+    image: fireflyiii/core:latest
+    container_name: fireflyiii-app
+    restart: always
+    volumes:
+      - firefly_iii_upload:/var/www/html/storage/upload
+    env_file: ff3.env
+    environment:
+      - VIRTUAL_HOST=firefly3.example.com
+      - VIRTUAL_PORT=8080
+      - APP_URL=https://firefly3.example.com
+      - TRUSTED_PROXIES=**
+      - TZ=America/Los_Angeles
+    depends_on:
+      - db
+
+  db:
+    image: mariadb
+    container_name: ff3-db
+    hostname: fireflyiiidb
+    restart: always
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_USER=firefly
+      - MYSQL_PASSWORD=somerandompassword
+      - MYSQL_DATABASE=firefly
+    volumes:
+      - firefly_iii_db:/var/lib/mysql
+
+volumes:
+  portainer_data:
+  firefly_iii_upload:
+  firefly_iii_db:
